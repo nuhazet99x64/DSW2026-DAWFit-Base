@@ -12,18 +12,33 @@
     <a href="{{ url_for('public.guardar_preferencia', deporte='Natación') }}">🏊 Natación</a> |
     <a href="{{ url_for('public.guardar_preferencia', deporte='Crossfit') }}">🏋️ Crossfit</a>
     {% if deporte_fav %}
-        | <strong>Activo: {{ deporte_fav }}</strong>
-        (<a href="{{ url_for('public.limpiar_preferencia') }}" style="color: #e63946;">Quitar preferencia</a>)
+    | <strong>Activo: {{ deporte_fav }}</strong>
+    (<a href="{{ url_for('public.limpiar_preferencia') }}" style="color: #e63946;">Quitar preferencia</a>)
     {% endif %}
 </div>
 
 <!-- TODO (Bloque 1 - Ejercicio 1.1): Añadir formulario GET con campo de texto 'busqueda' y checkbox 'solo_con_plazas' -->
+<form method="get">
+    <div>
+        <label for="busqueda">Buscar:</label>
+        <input type="text" name="busqueda" id="busqueda" placeholder="Escribe aquí..."
+            value="{{request.args.get('busqueda','')}}">
+    </div>
+    <div>
+        <input type="checkbox" name="solo_con_plazas" id="solo_con_plazas" value="1" {%if
+            request.args.get('solo_con_plazas')%}checked{%endif%}>
+        <label for="solo_con_plazas">Solo con plazas disponibles</label>
+    </div>
+    <button type="submit">Filtrar</button>
+</form>
+<!--FIN Ejercicio 1.1-->
 
 {% for act in lista_actividades %}
 <div class="card-actividad">
     <div>
         {% if act.imagen %}
-            <img src="{{ url_for('static', filename='img/uploads/' + act.imagen) }}" width="80" alt="{{ act.nombre }}" style="vertical-align: middle; margin-right: 12px; border-radius: 4px;">
+        <img src="{{ url_for('static', filename='img/uploads/' + act.imagen) }}" width="80" alt="{{ act.nombre }}"
+            style="vertical-align: middle; margin-right: 12px; border-radius: 4px;">
         {% endif %}
 
         <a href="{{ url_for('public.ver_actividad', act_id=act.id) }}">
@@ -34,23 +49,25 @@
         <!-- TODO (Bloque 1 - Ejercicio 1.2): Mostrar etiqueta '⭐ Tu deporte favorito' si act.deporte coincide con la cookie deporte_fav -->
 
         {% if act.plazas_libres > 0 %}
-            <span style="color: green; margin-left: 8px;">({{ act.plazas_libres }} plazas libres)</span>
+        <span style="color: green; margin-left: 8px;">({{ act.plazas_libres }} plazas libres)</span>
         {% else %}
-            <span style="color: #e63946; font-weight: bold; margin-left: 8px;">(CUPO LLENO)</span>
+        <span style="color: #e63946; font-weight: bold; margin-left: 8px;">(CUPO LLENO)</span>
         {% endif %}
     </div>
 
     <div>
         {% if act.plazas_libres > 0 %}
-            <form action="{{ url_for('public.apuntar_actividad', act_id=act.id) }}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-success">+ Apuntarme</button>
-            </form>
+        <form action="{{ url_for('public.apuntar_actividad', act_id=act.id) }}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-success">+ Apuntarme</button>
+        </form>
         {% endif %}
 
         <!-- TODO (Bloque 2): Mostrar los controles Editar y Eliminar SOLO si el usuario autenticado es monitor -->
         <a href="{{ url_for('admin.editar_actividad', act_id=act.id) }}" style="margin-left: 8px;">Editar</a>
-        <form action="{{ url_for('admin.eliminar_actividad', act_id=act.id) }}" method="post" style="display:inline; margin-left: 5px;">
-            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar {{ act.nombre }}?');">Eliminar</button>
+        <form action="{{ url_for('admin.eliminar_actividad', act_id=act.id) }}" method="post"
+            style="display:inline; margin-left: 5px;">
+            <button type="submit" class="btn btn-danger"
+                onclick="return confirm('¿Eliminar {{ act.nombre }}?');">Eliminar</button>
         </form>
     </div>
 </div>

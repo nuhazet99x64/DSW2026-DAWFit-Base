@@ -22,9 +22,14 @@ def home():
 @public_bp.route("/actividades")
 def mostrar_actividades():
 
-    actividades = Actividad.query.all()
+    busqueda = request.args.get("busqueda", "").strip()
+    solo_con_plazas = request.args.get("solo_con_plazas")
 
+    actividades = Actividad.query.all()
     deporte_fav = None
+
+    # if busqueda is not None and solo_con_plazas==0:
+    #     actividades
 
     return render_template(
         "catalogo.html",
