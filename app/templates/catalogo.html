@@ -25,8 +25,8 @@
             value="{{request.args.get('busqueda','')}}">
     </div>
     <div>
-        <input type="checkbox" name="solo_con_plazas" id="solo_con_plazas" value="1" {%if
-            request.args.get('solo_con_plazas')%}checked{%endif%}>
+        <input type="checkbox" name="solo_con_plazas" id="solo_con_plazas" value="1" {% if
+            request.args.get('solo_con_plazas') %}checked{% endif %}>
         <label for="solo_con_plazas">Solo con plazas disponibles</label>
     </div>
     <button type="submit">Filtrar</button>
@@ -47,7 +47,9 @@
         <span>({{ act.deporte }}) — <strong>{{ "%.2f"|format(act.cuota) }} €/mes</strong></span>
 
         <!-- TODO (Bloque 1 - Ejercicio 1.2): Mostrar etiqueta '⭐ Tu deporte favorito' si act.deporte coincide con la cookie deporte_fav -->
-
+        {%if act.deporte == deporte_fav%}
+        <span class="badge-fav">⭐ Tu deporte favorito</span>
+        {%endif%}
         {% if act.plazas_libres > 0 %}
         <span style="color: green; margin-left: 8px;">({{ act.plazas_libres }} plazas libres)</span>
         {% else %}
